@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Timeless Love - 5th Anniversary</title>
+    <style>
+        /* IMPORTING DA VINCI-LEVEL FONTS */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Pinyon+Script&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0f0f0f; /* Deepest Black */
+            font-family: 'Cinzel', serif;
+        }
+
+        /* --- BACKGROUND CANVAS (Golden Embers) --- */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* --- INTRO LAYER --- */
+        #intro-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: radial-gradient(circle at center, #2a0a12 0%, #000000 100%);
+            transition: opacity 2.5s ease-in-out;
+        }
+
+        .title-gold {
+            font-size: 3.5rem;
+            color: #d4af37; /* Metallic Gold */
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            margin-bottom: 40px;
+            animation: glow 3s infinite alternate;
+            padding: 0 20px;
+        }
+
+        .btn-royal {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 20px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            z-index: 101;
+        }
+
+        .btn-royal:hover {
+            background: #d4af37;
+            color: #000;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* --- THE SANCTUARY (Main Content) --- */
+        #sanctuary {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row; /* Side by side layout for desktop */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none; /* Disabled until active */
+            transition: opacity 3s ease;
+            z-index: 50;
+            gap: 50px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- THE LETTER (Left Side) --- */
+        .parchment {
+            background: #f3e5ab; /* Parchment color */
+            width: 400px;
+            max-width: 90%;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 60px rgba(160, 82, 45, 0.3);
+            border-radius: 5px;
+            position: relative;
+            transform: rotate(-2deg); /* Artistic tilt */
+            border: 1px solid #c2b280;
+        }
+
+        .parchment::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .letter-text {
+            font-family: 'Pinyon Script', cursive;
+            color: #3b2f2f; /* Dark ink color */
+            font-size: 1.3rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .letter-text strong {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 15px;
+            color: #590d22;
+        }
+
+        /* --- THE GALLERY (Right Side) --- */
+        .frame-container {
+            position: relative;
+            width: 350px; /* Portrait size */
+            height: 500px;
+            border: 20px solid #b8860b; /* Dark Goldenrod base */
+            border-image: linear-gradient(to bottom right, #fceabb, #f8b500, #fceabb, #b8860b) 1;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: #222;
+            transform: rotate(2deg); /* Counter balance tilt */
+        }
+
+        .frame-inner {
+            width: 100%;
+            height: 100%;
+            border: 5px solid #4a3c31; 
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .art-slide {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            /* The Ken Burns Effect */
+            animation: breathe 6s ease-in-out infinite alternate;
+        }
+        
+        /* HELPER: If image fails to load, show text */
+        .art-slide[alt]:after { 
+            display: block;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #222;
+            color: #888;
+            content: attr(alt);
+            text-align: center;
+            padding-top: 50%;
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #aa8e29; }
+            to { text-shadow: 0 0 30px #ffd700, 0 0 10px white; }
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); filter: brightness(0.8) sepia(0.2); }
+            100% { transform: scale(1.15); filter: brightness(1.1) sepia(0); }
+        }
+
+        /* --- RESPONSIVE FOR MOBILE --- */
+        @media (max-width: 900px) {
+            #sanctuary {
+                flex-direction: column;
+                overflow-y: auto;
+                justify-content: flex-start;
+                padding-top: 20px;
+            }
+            .parchment {
+                width: 85%;
+                margin-bottom: 20px;
+                transform: rotate(0deg);
+                padding: 20px;
+                order: 2; /* Move letter below photo on mobile */
+            }
+            .frame-container {
+                width: 80%;
+                height: 400px;
+                transform: rotate(0deg);
+                margin-bottom: 20px;
+                flex-shrink: 0;
+                order: 1; /* Show photo first on mobile */
+            }
+            .title-gold {
+                font-size: 2rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div id="intro-layer">
+        <h1 class="title-gold">5 Years of Us</h1>
+        <button class="btn-royal" onclick="revealMasterpiece()">Enter the Gallery</button>
+        <p style="color: #666; font-size: 0.8rem; margin-top: 20px;">(Click to start music & show)</p>
+    </div>
+
+    <div id="sanctuary">
+        
+        <div class="parchment">
+            <div class="letter-text">
+                <strong>My Si mi Vida,</strong>
+                <p>Five years have passed like a beautiful dream. Before we celebrate, I must speak from my heart. I am deeply sorry for the times I was toxic, for the moments I wasn't the partner you deserved.</p>
+                <p>Your patience is my greatest gift. You stayed when others would have left. You loved when I was hard to love.</p>
+                <p>You are my muse, my world, and my eternity. I promise to spend the rest of my life making it up to you.</p>
+                <p><em>Forever Yours.</em></p>
+            </div>
+        </div>
+
+        <div class="frame-container">
+            <div class="frame-inner">
+                <img class="art-slide" src="pic1.jpeg">
+
+                <img class="art-slide" src="pic2.jpeg">
+
+                <img class="art-slide" src="pic3.jpeg">
+
+                <img class="art-slide" src="pic4.jpeg">
+
+                <img class="art-slide" src="pic5.jpeg">
+
+                <img class="art-slide" src="pic6.jpeg">
+
+                <img class="art-slide" src="pic7.jpeg">
+
+                <img class="art-slide" src="pic8.jpeg">
+
+                <img class="art-slide" src="pic9.jpeg">
+
+                <img class="art-slide" src="pic10.jpeg">
+
+                <img class="art-slide" src="pic11.jpeg">
+
+                <img class="art-slide" src="pic12.jpeg">
+
+                <img class="art-slide" src="pic13.jpeg">
+
+                <img class="art-slide" src="pic14.jpeg">
+
+                <img class="art-slide" src="pic15.jpeg">
+
+                <img class="art-slide" src="pic16.jpeg">
+
+                <img class="art-slide" src="pic17.jpeg">
+
+                <img class="art-slide" src="pic18.jpeg">
+
+                <img class="art-slide" src="pic19.jpeg">
+
+                <img class="art-slide" src="pic20.jpeg">
+
+                <img class="art-slide" src="pic21.jpeg">
+        </div>
+
+    </div>
+
+    <script>
+        // --- GOLDEN EMBERS PARTICLE SYSTEM ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1; 
+                this.speedY = Math.random() * 1 + 0.2; // Float up
+                this.color = `rgba(255, 215, 0, ${Math.random() * 0.5 + 0.2})`; // Gold
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+
+        // --- LOGIC FOR REVEAL ---
+        function revealMasterpiece() {
+            const intro = document.getElementById('intro-layer');
+            const sanctuary = document.getElementById('sanctuary');
+            const music = document.getElementById('bg-music');
+
+            // Fade out intro
+            intro.style.opacity = '0';
+            
+            // Play music
+            music.volume = 1.0; 
+            music.play().then(() => {
+                console.log("Music playing");
+            }).catch(e => {
+                console.log("Music failed: " + e);
+            });
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                
+                // Fade in Sanctuary
+                sanctuary.style.pointerEvents = 'all'; 
+                sanctuary.style.opacity = '1';
+                
+                // Start Slideshow
+                changeArt();
+
+            }, 2500); // 2.5s wait for the fade out
+        }
+
+        // --- ART GALLERY SLIDESHOW ---
+        let artIndex = 0;
+        function changeArt() {
+            let i;
+            let arts = document.getElementsByClassName("art-slide");
+            for (i = 0; i < arts.length; i++) {
+                arts[i].style.display = "none";  
+            }
+            artIndex++;
+            if (artIndex > arts.length) {artIndex = 1}    
+            arts[artIndex-1].style.display = "block";  
+            setTimeout(changeArt, 4000); // Change every 4 seconds
+        }
+    </script>
+</body>
+</html>
